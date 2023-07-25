@@ -10,7 +10,7 @@ class Api::V1::CategoriesController < ApplicationController
 
   # GET /categories/1
   def show
-    render json: @category
+    render json: @category, show_tasks: true
   end
 
   # POST /categories
@@ -46,6 +46,8 @@ class Api::V1::CategoriesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def category_params
-      params.require(:category).permit(:name, :description)
+      params.require(:category).permit(:name, :description,
+        tasks_attributes: [:id, :name, :description, :due_date, :_destroy]
+      )
     end
 end

@@ -2,10 +2,26 @@ require 'rails_helper'
 
 
 RSpec.describe "api/v1/categories", type: :request do
+  let(:tasks) do
+    [
+      attributes_for(:task, 
+        name: "Add new column in the contact view", 
+        description: "IN the index from contact module add new column called 'created date' with the format DD/MM/YYYY",
+        due_date: Time.now + 2.days
+      ),
+      attributes_for(:task, 
+        name: "Return the new field in the contact end point", 
+        description: "IN the end point /contacts rteurn in the response the new field called 'created date' with the format DD/MM/YYYY",
+        due_date: Time.now + 2.days
+      )
+    ]
+  end
+
   let(:valid_attributes) do
     {
       name: "Feature",
-      description: "This is a feature description"
+      description: "This is a feature description",
+      tasks_attributes: tasks
 
     }    
   end
@@ -40,6 +56,13 @@ RSpec.describe "api/v1/categories", type: :request do
           post api_v1_categories_url,
                params: { category: valid_attributes }, as: :json
         }.to change(Category, :count).by(1)
+      end
+
+      it "creates a new Category and increment tasks" do
+        expect {
+          post api_v1_categories_url,
+               params: { category: valid_attributes }, as: :json
+        }.to change(Task, :count).by(tasks.size)
       end
 
       it "renders a JSON response with the new category" do
