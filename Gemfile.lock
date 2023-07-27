@@ -93,6 +93,7 @@ GEM
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     jsonapi-renderer (0.2.2)
+    jwt (2.7.1)
     loofah (2.21.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -180,6 +181,7 @@ GEM
     rspec-support (3.12.1)
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
+    simple_command (1.0.1)
     thor (1.2.2)
     timeout (0.4.0)
     tzinfo (2.0.6)
@@ -197,6 +199,7 @@ DEPENDENCIES
   bcrypt
   bootsnap
   factory_bot_rails
+  jwt
   mysql2 (~> 0.5)
   pry-rails
   puma (~> 5.0)
@@ -204,6 +207,7 @@ DEPENDENCIES
   rails (~> 7.0.6)
   rspec-rails
   shoulda-matchers
+  simple_command
   tzinfo-data
 
 RUBY VERSION

@@ -11,6 +11,8 @@ gem "bootsnap", require: false
 gem 'active_model_serializers', '~> 0.10.13'
 gem 'rack-cors'
 gem 'bcrypt'
+gem 'jwt'
+gem 'simple_command'
 
 group :development, :test do
   gem 'pry-rails'
