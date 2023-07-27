@@ -15,7 +15,7 @@ RSpec.describe CategorySerializer, type: :serializer do
 
   context "when render show" do
     let(:category) { create :category, :with_tasks, name: 'Category' }
-    let(:serializer) { described_class.new(category, show_movies: true) }
+    let(:serializer) { described_class.new(category, show_tasks: true) }
     let(:serialization) { ActiveModelSerializers::Adapter.create(serializer) }
 
     let(:subject) { JSON.parse(serialization.to_json) }
