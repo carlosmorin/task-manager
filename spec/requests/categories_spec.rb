@@ -2,6 +2,17 @@ require 'rails_helper'
 
 
 RSpec.describe "api/v1/categories", type: :request do
+
+  let(:user) { create :user, password: "12331231"}
+  let(:token) { token_generator(user.id)}
+
+  before :each do
+    @env = {}
+    @env['HTTP_AUTHORIZATION'] = token
+
+  end
+
+
   let(:tasks) do
     [
       attributes_for(:task, 
@@ -36,7 +47,7 @@ RSpec.describe "api/v1/categories", type: :request do
   describe "GET /index" do
     it "renders a successful response" do
       Category.create! valid_attributes
-      get api_v1_categories_url, as: :json
+      get api_v1_categories_url, headers: @env
       expect(response).to be_successful
     end
   end
@@ -44,7 +55,7 @@ RSpec.describe "api/v1/categories", type: :request do
   describe "GET /show" do
     it "renders a successful response" do
       category = Category.create! valid_attributes
-      get api_v1_category_url(category), as: :json
+      get api_v1_category_url(category), headers: @env
       expect(response).to be_successful
     end
   end
@@ -53,20 +64,20 @@ RSpec.describe "api/v1/categories", type: :request do
     context "with valid parameters" do
       it "creates a new Category" do
         expect {
-          post api_v1_categories_url,
+          post api_v1_categories_url, headers: @env,
                params: { category: valid_attributes }, as: :json
         }.to change(Category, :count).by(1)
       end
 
       it "creates a new Category and increment tasks" do
         expect {
-          post api_v1_categories_url,
+          post api_v1_categories_url, headers: @env,
                params: { category: valid_attributes }, as: :json
         }.to change(Task, :count).by(tasks.size)
       end
 
       it "renders a JSON response with the new category" do
-        post api_v1_categories_url,
+        post api_v1_categories_url, headers: @env,
              params: { category: valid_attributes }, as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -76,13 +87,13 @@ RSpec.describe "api/v1/categories", type: :request do
     context "with invalid parameters" do
       it "does not create a new Category" do
         expect {
-          post api_v1_categories_url,
+          post api_v1_categories_url, headers: @env,
                params: { category: invalid_attributes }, as: :json
         }.to change(Category, :count).by(0)
       end
 
       it "renders a JSON response with errors for the new category" do
-        post api_v1_categories_url,
+        post api_v1_categories_url, headers: @env,
              params: { category: invalid_attributes }, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -101,7 +112,7 @@ RSpec.describe "api/v1/categories", type: :request do
 
       it "updates the requested category" do
         category = Category.create! valid_attributes
-        patch api_v1_category_url(category),
+        patch api_v1_category_url(category), headers: @env,
               params: { category: new_attributes }, as: :json
         category.reload
         expect(category.name).to eq(new_attributes[:name])
@@ -109,7 +120,7 @@ RSpec.describe "api/v1/categories", type: :request do
 
       it "renders a JSON response with the category" do
         category = Category.create! valid_attributes
-        patch api_v1_category_url(category),
+        patch api_v1_category_url(category), headers: @env,
               params: { category: new_attributes }, as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -119,7 +130,7 @@ RSpec.describe "api/v1/categories", type: :request do
     context "with invalid parameters" do
       it "renders a JSON response with errors for the category" do
         category = Category.create! valid_attributes
-        patch api_v1_category_url(category),
+        patch api_v1_category_url(category), headers: @env,
               params: { category: invalid_attributes }, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -131,7 +142,7 @@ RSpec.describe "api/v1/categories", type: :request do
     it "destroys the requested category" do
       category = Category.create! valid_attributes
       expect {
-        delete api_v1_category_url(category), as: :json
+        delete api_v1_category_url(category), headers: @env, as: :json
       }.to change(Category, :count).by(-1)
     end
   end
