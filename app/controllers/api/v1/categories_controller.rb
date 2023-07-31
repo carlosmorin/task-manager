@@ -1,12 +1,12 @@
 class Api::V1::CategoriesController < ApplicationController
   before_action :set_category, only: %i[ show update destroy ]
+  before_action :set_params, only: %i[index]
+
 
   # GET /categories
   def index
-    @categories = Category.all
+    @categories = Category.paginate(page: @page, per_page: @per_page).ordering(@order.to_sym).filter_by_name(@query)
 
-    filter_by_name if params[:query].present?
-    
     render json: @categories
   end
 
@@ -53,8 +53,10 @@ class Api::V1::CategoriesController < ApplicationController
       )
     end
 
-    def filter_by_name
-      query = params[:query]
-      @categories = @categories.where("name LIKE ?", "%#{query}%")
+    def set_params
+      @order = params[:order].present? ? Regexp.escape(params[:order]) : 'asc'
+      @query = params[:query].present? ? Regexp.escape(params[:query]) : nil
+      @page = params[:page]
+      @per_page = params[:per_page]
     end
 end
