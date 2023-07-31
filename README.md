@@ -1,24 +1,45 @@
-# README
+##### Prerequisites
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The setups steps expect following tools installed on the system.
 
-Things you may want to cover:
+- Github
+- Ruby [3.0.2](https://github.com/carlosmorin/task-manager/blob/main/Gemfile#L1)
+- Rails [7.0.6](https://github.com/carlosmorin/task-manager/blob/main/Gemfile#L6)
 
-* Ruby version
+##### 1. Check out the repository
 
-* System dependencies
+```bash
+git clone git@github.com:carlosmorin/task-manager.git
+```
+##### 1. Run
+```bash
+bundle install
+```
 
-* Configuration
+##### 2. Install MySQL
 
-* Database creation
+For this proyect we are use Mysql for the database managment 
 
-* Database initialization
+```bash
+sudo apt-get install mysql-server mysql-client libmysqlclient-dev
+```
 
-* How to run the test suite
+##### 3. Create and setup the database
 
-* Services (job queues, cache servers, search engines, etc.)
+Run the following commands to create and setup the database.
 
-* Deployment instructions
+```ruby
+bundle exec rake db:create
+bundle exec rake db:migrate
+bundle exec rake db:seed
+```
 
-* ...
+##### 4. Start the Rails server
+
+You can start the rails server using the command given below.
+
+```ruby
+bundle exec rails s
+```
+
+And now you can visit the site with the URL http://localhost:3000
