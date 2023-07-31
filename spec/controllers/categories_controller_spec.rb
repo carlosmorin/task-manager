@@ -36,6 +36,18 @@ RSpec.describe Api::V1::CategoriesController, type: :controller do
       get :index, params: {}
       expect(response).to be_successful
     end
+
+    it "Filter with existing category" do
+      Category.create! valid_attributes
+      get :index, params: { query: valid_attributes[:name] }
+      expect(JSON.parse(response.body).count).to eq(1)
+    end
+
+    it "Filter with unexisting category" do
+      Category.create! valid_attributes
+      get :index, params: { query: valid_attributes[:name].reverse }
+      expect(JSON.parse(response.body).count).to eq(0)
+    end
   end
 
   describe "GET #show" do

@@ -5,6 +5,8 @@ class Api::V1::CategoriesController < ApplicationController
   def index
     @categories = Category.all
 
+    filter_by_name if params[:query].present?
+    
     render json: @categories
   end
 
@@ -49,5 +51,10 @@ class Api::V1::CategoriesController < ApplicationController
       params.require(:category).permit(:name, :description,
         tasks_attributes: [:id, :name, :description, :due_date, :_destroy]
       )
+    end
+
+    def filter_by_name
+      query = params[:query]
+      @categories = @categories.where("name LIKE ?", "%#{query}%")
     end
 end
