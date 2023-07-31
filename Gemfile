@@ -13,12 +13,14 @@ gem 'rack-cors'
 gem 'bcrypt'
 gem 'jwt'
 gem 'simple_command'
+gem 'will_paginate'
 
 group :development, :test do
   gem 'pry-rails'
   gem 'rspec-rails'
   gem 'factory_bot_rails'
   gem 'shoulda-matchers'
+  gem 'rubocop', '~> 1.55', '>= 1.55.1'
 end
 
 group :development do

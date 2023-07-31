@@ -1,9 +1,11 @@
 class Api::V1::CategoriesController < ApplicationController
   before_action :set_category, only: %i[ show update destroy ]
+  before_action :set_params, only: %i[index]
+
 
   # GET /categories
   def index
-    @categories = Category.all
+    @categories = Category.paginate(page: @page, per_page: @per_page).ordering(@order.to_sym).filter_by_name(@query)
 
     render json: @categories
   end
@@ -18,7 +20,7 @@ class Api::V1::CategoriesController < ApplicationController
     @category = Category.new(category_params)
 
     if @category.save
-      render json: @category, status: :created
+      render json: @category, show_tasks: true, status: :created
     else
       render json: @category.errors, status: :unprocessable_entity
     end
@@ -27,7 +29,7 @@ class Api::V1::CategoriesController < ApplicationController
   # PATCH/PUT /categories/1
   def update
     if @category.update(category_params)
-      render json: @category
+      render json: @category, show_tasks: true
     else
       render json: @category.errors, status: :unprocessable_entity
     end
@@ -49,5 +51,12 @@ class Api::V1::CategoriesController < ApplicationController
       params.require(:category).permit(:name, :description,
         tasks_attributes: [:id, :name, :description, :due_date, :_destroy]
       )
+    end
+
+    def set_params
+      @order = params[:order].present? ? Regexp.escape(params[:order]) : 'asc'
+      @query = params[:query].present? ? Regexp.escape(params[:query]) : nil
+      @page = params[:page]
+      @per_page = params[:per_page]
     end
 end
