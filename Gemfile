@@ -13,6 +13,7 @@ gem 'rack-cors'
 gem 'bcrypt'
 gem 'jwt'
 gem 'simple_command'
+gem 'will_paginate'
 
 group :development, :test do
   gem 'pry-rails'
